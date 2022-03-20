@@ -1,3 +1,5 @@
 .idea
 venv
+pycache/
+db.sqlite3
 README.md
