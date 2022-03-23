@@ -16,11 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from mainapp.views import index, products
+from mainapp.views import index, products, test
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', index, name='index'),
-    path('products/', products, name='products')
-
+    path('admin/', admin.site.urls),  # сайт администратора
+    path('', index, name='index'),  # главная страница
+    path('products/', products, name='products'),  # страница с товарами
+    path('test/', test, name='test')
 ]
