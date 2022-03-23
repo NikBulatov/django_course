@@ -20,7 +20,7 @@ from mainapp.views import index, products, test
 
 urlpatterns = [
     path('admin/', admin.site.urls),  # сайт администратора
-    path('', index, name='index'),  # главная страница
+    path('index/', index, name='index'),  # главная страница
     path('products/', products, name='products'),  # страница с товарами
     path('test/', test, name='test')
 ]
