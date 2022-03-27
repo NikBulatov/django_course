@@ -5,15 +5,33 @@ from django.http import HttpResponse
 # Create your views here.
 
 
-def index(request):  # create controller
-    content = {
-        'title': 'GeekShop'
-    }
-    # request, template (path to html)
+def index(request):
+    content = {'title': 'GeekShop'}
     return render(request, 'mainapp/index.html', context=content)
 
 
 def products(request):
+    items = [{'name': 'Худи черного цвета с монограммами adidas Originals',
+              'price': 6090,
+              'description': 'Мягкая ткань для свитшотов. Стиль и комфорт – это образ жизни.',
+              'picture': '{% static \'vendor/img/products/Adidas-hoodie.png\' %}'},
+             {'name': 'Синяя куртка The North Face',
+              'price': 23_725,
+              'description': 'Гладкая ткань. Водонепроницаемое покрытие. Легкий и теплый пуховый наполнитель.'},
+             {'name': 'Коричневый спортивный oversized-топ ASOS DESIGN',
+              'price': 3390,
+              'description': 'Материал с плюшевой текстурой. Удобный и мягкий.'},
+             {'name': 'Черный рюкзак Nike Heritage',
+              'price': 2340,
+              'description': 'Плотная ткань. Легкий материал.'},
+             {'name': 'Черные туфли на платформе с 3 парами люверсов Dr Martens 1461 Bex',
+              'price': 13_590,
+              'description': 'Гладкий кожаный верх. Натуральный материал.'},
+             {'name': 'Темно-синие широкие строгие брюки ASOS DESIGN',
+              'price': 2890,
+              'description': 'Легкая эластичная ткань сирсакер Фактурная ткань.'},
+             ]
+
     categories = [{'name': 'Новинки'},
                   {'name': 'Одежда'},
                   {'name': 'Обувь'},
@@ -22,30 +40,6 @@ def products(request):
     content = {
         'title': 'GeekShop - Каталог',
         'categories': categories,
-    }
-    return render(request, 'mainapp/products.html', content)
+        'items': items}
 
-# def test(request):
-#     context = {'title': 'geekshop',
-#                'header': 'Welcome',
-#                'user': 'Niktia',
-#                'products': [
-#                    {'name': 'Худи черного цвета с монограммами adidas Originals', 'price': 6090},
-#                    {'name': 'Синяя куртка The North Face', 'price': 15630},
-#                    {'name': 'Коричневый спортивный oversize-топ ASOS DESIGN', 'price': 3500},
-#                    {'name': 'Черный рюкзак Nike Heritage', 'price': 2590},
-#                    {'name': 'Черные туфли на платформе с 3 парами люверсов Dr Martens 1461 Bex', 'price': 3260},
-#                    {'name': 'Темно-синие широкие строгие брюки ASOS DESIGN', 'price': 2890},
-#                ],
-#                'promotion': False,
-#                'products_promotion': [
-#                    {'name': 'Худи черного цвета с монограммами adidas Originals', 'price': 5000},
-#                    {'name': 'Синяя куртка The North Face', 'price': 5000},
-#                    {'name': 'Коричневый спортивный oversize-топ ASOS DESIGN', 'price': 5000},
-#                    {'name': 'Черный рюкзак Nike Heritage', 'price': 5000},
-#                    {'name': 'Черные туфли на платформе с 3 парами люверсов Dr Martens 1461 Bex', 'price': 5000},
-#                    {'name': 'Темно-синие широкие строгие брюки ASOS DESIGN', 'price': 5000},
-#                ]
-#
-#                }
-#     return render(request, 'mainapp/test.html', context=context)
+    return render(request, 'mainapp/products.html', content)
