@@ -13,8 +13,7 @@ def index(request):
 def products(request):
     items = [{'name': 'Худи черного цвета с монограммами adidas Originals',
               'price': 6090,
-              'description': 'Мягкая ткань для свитшотов. Стиль и комфорт – это образ жизни.',
-              'picture': '{% static \'vendor/img/products/Adidas-hoodie.png\' %}'},
+              'description': 'Мягкая ткань для свитшотов. Стиль и комфорт – это образ жизни.'},
              {'name': 'Синяя куртка The North Face',
               'price': 23_725,
               'description': 'Гладкая ткань. Водонепроницаемое покрытие. Легкий и теплый пуховый наполнитель.'},
