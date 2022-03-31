@@ -1,8 +1,17 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+import os.path
+import json
 
+from django.shortcuts import render
 
 # Create your views here.
+MODULE_DIR = os.path.dirname(__file__)
+
+
+def read_json(path):
+    data_path = os.path.join(MODULE_DIR, path)
+    with open(data_path, encoding='utf-8') as f:
+        items = json.load(f)
+        return items
 
 
 def index(request):
@@ -11,30 +20,8 @@ def index(request):
 
 
 def products(request):
-    items = [{'name': 'Худи черного цвета с монограммами adidas Originals',
-              'price': 6090,
-              'description': 'Мягкая ткань для свитшотов. Стиль и комфорт – это образ жизни.'},
-             {'name': 'Синяя куртка The North Face',
-              'price': 23_725,
-              'description': 'Гладкая ткань. Водонепроницаемое покрытие. Легкий и теплый пуховый наполнитель.'},
-             {'name': 'Коричневый спортивный oversized-топ ASOS DESIGN',
-              'price': 3390,
-              'description': 'Материал с плюшевой текстурой. Удобный и мягкий.'},
-             {'name': 'Черный рюкзак Nike Heritage',
-              'price': 2340,
-              'description': 'Плотная ткань. Легкий материал.'},
-             {'name': 'Черные туфли на платформе с 3 парами люверсов Dr Martens 1461 Bex',
-              'price': 13_590,
-              'description': 'Гладкий кожаный верх. Натуральный материал.'},
-             {'name': 'Темно-синие широкие строгие брюки ASOS DESIGN',
-              'price': 2890,
-              'description': 'Легкая эластичная ткань сирсакер Фактурная ткань.'},
-             ]
-
-    categories = [{'name': 'Новинки'},
-                  {'name': 'Одежда'},
-                  {'name': 'Обувь'},
-                  {'name': 'Аксессуары'}]
+    items = read_json('fixtrues/items.json')
+    categories = read_json('fixtrues/categories.json')
 
     content = {
         'title': 'GeekShop - Каталог',
