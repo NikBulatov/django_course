@@ -3,4 +3,6 @@ from mainapp.views import products
 
 app_name = 'mainapp'
 urlpatterns = [
-    path('', products, name='products')]
+    path('', products, name='products'),
+    # path('detail/', products, name='detail')
+]
