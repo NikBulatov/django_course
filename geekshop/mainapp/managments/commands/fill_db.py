@@ -1,7 +1,7 @@
 import json
 from django.core.management.base import BaseCommand
 
-# from authapp.models import User
+from authapp.models import User
 from mainapp.models import ProductCategories, Product
 
 
@@ -12,7 +12,7 @@ def load_from_json(file_name):
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        # User.objects.create_superuser(username='nikita', email='', password='123')
+        User.objects.create_superuser(username='nikita', email='lol@admin.com', password='123')
         categories = load_from_json('mainapp/fixtures/category.json')
 
         ProductCategories.objects.all().delete()
