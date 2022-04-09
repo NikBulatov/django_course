@@ -5,6 +5,5 @@ from django.db import models
 # Create your models here.
 
 class User(AbstractUser):
-    image = models.ImageField(upload_to='user_images', blank=True)
+    image = models.ImageField(upload_to='users_image', blank=True)
     age = models.PositiveIntegerField(default=18)
-    email = models.EmailField(unique=True, blank=False)
