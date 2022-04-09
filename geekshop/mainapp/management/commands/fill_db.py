@@ -7,13 +7,12 @@ from mainapp.models import ProductCategories, Product
 
 def load_from_json(file_name):
     with open(file_name, mode='r', encoding='utf-8') as infile:
-
         return json.load(infile)
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        User.objects.create_superuser(username='nikolay',email='admin@mail.ru',password='1')
+        User.objects.create_superuser(username='nikita', email='admin@mail.ru', password='123')
         categories = load_from_json('mainapp/fixtures/category.json')
 
         ProductCategories.objects.all().delete()
@@ -23,8 +22,8 @@ class Command(BaseCommand):
             new_category = ProductCategories(**cat)
             new_category.save()
 
-# <form>
-# </form>
+        # <form>
+        # </form>
         products = load_from_json('mainapp/fixtures/products.json')
 
         Product.objects.all().delete()
@@ -32,7 +31,6 @@ class Command(BaseCommand):
             prod = product.get('fields')
             category = prod.get('category')
             _category = ProductCategories.objects.get(id=category)
-            prod['category'] =_category
+            prod['category'] = _category
             new_category = Product(**prod)
             new_category.save()
-
