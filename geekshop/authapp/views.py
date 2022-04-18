@@ -12,14 +12,14 @@ from authapp.forms import UserLoginForm, UserRegisterForm, UserProfileForm
 
 def login(request):
     if request.method == 'POST':
-        form = UserLoginForm(data=request.POST)
-        if form.is_valid():
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-            user = auth.authenticate(username=username, password=password)
-            if user.is_active:
-                auth.login(request, user)
-                return HttpResponseRedirect(reverse('index'))
+        form = UserLoginForm(data=request.POST)  # возвращает html-код для логина, если запрос GET, форма будет пустая
+        if form.is_valid():  # если форма валидна
+            username = request.POST.get('username')  # берём имя
+            password = request.POST.get('password')  # пароль
+            user = auth.authenticate(username=username, password=password)  # если всё ок, то получим переменную user
+            if user.is_active:  # если он активен
+                auth.login(request, user)  # прописываем пользователя в объект запроса request.
+                return HttpResponseRedirect(reverse('index'))  # Можно просто передать ей url-адрес в виде строки, а можно через reverse() вернуть адрес по его имени в диспетчере URL) Если не найдёт, то будет ошибка!
         #     else:
         #         print('Юзер не активный')
         # # else:

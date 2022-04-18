@@ -7,11 +7,9 @@ from authapp.validator import validate_name
 
 
 class UserLoginForm(AuthenticationForm):
-    # username = forms.CharField(widget=forms.TextInput(), validators=[validate_name])
-
     class Meta:
         model = User
-        fields = ('username', 'password')
+        fields = ('username', 'password')  # Имена атрибутов модели, которые необходимо вывести на странице
 
     def __init__(self, *args, **kwargs):
         super(UserLoginForm, self).__init__(*args, **kwargs)

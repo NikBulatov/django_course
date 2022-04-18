@@ -128,6 +128,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-AUTH_USER_MODEL = 'authapp.User'
+AUTH_USER_MODEL = 'authapp.User'  # используем модель для авторизации пользователя
 LOGIN_URL = '/authapp/login/'
 LOGIN_REDIRECT_URL = '/'
