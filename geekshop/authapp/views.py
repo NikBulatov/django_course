@@ -19,7 +19,8 @@ def login(request):
             user = auth.authenticate(username=username, password=password)  # если всё ок, то получим переменную user
             if user.is_active:  # если он активен
                 auth.login(request, user)  # прописываем пользователя в объект запроса request.
-                return HttpResponseRedirect(reverse('index'))  # Можно просто передать ей url-адрес в виде строки, а можно через reverse() вернуть адрес по его имени в диспетчере URL) Если не найдёт, то будет ошибка!
+                return HttpResponseRedirect(reverse(
+                    'index'))  # Можно url-адрес в виде строки, а можно через reverse() вернуть адрес по его имени в диспетчере URL) Если не найдёт, то будет ошибка!
         #     else:
         #         print('Юзер не активный')
         # # else:
@@ -28,7 +29,7 @@ def login(request):
     else:
         form = UserLoginForm()
     context = {
-        'title': 'Gekshop | Авторизация',
+        'title': 'GeekShop | Авторизация',
         'form': form
     }
     return render(request, 'authapp/login.html', context)
@@ -46,7 +47,7 @@ def register(request):
     else:
         form = UserRegisterForm()
     context = {
-        'title': 'Gekshop | Регистрация',
+        'title': 'GeekShop | Регистрация',
         'form': form
     }
     return render(request, 'authapp/register.html', context)
@@ -63,7 +64,7 @@ def profile(request):
     user_select = request.user
 
     context = {
-        'title': 'Gekshop | Профайл',
+        'title': 'GeekShop | Профайл',
         'form': UserProfileForm(instance=user_select),
     }
 

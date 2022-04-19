@@ -1,6 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from django import forms
-from django.core.exceptions import ValidationError
 
 from authapp.models import User
 from authapp.validator import validate_name
@@ -8,12 +7,13 @@ from authapp.validator import validate_name
 
 class UserLoginForm(AuthenticationForm):
     class Meta:
-        model = User
+        model = User  # С которой будем работать
         fields = ('username', 'password')  # Имена атрибутов модели, которые необходимо вывести на странице
 
+    # Инициализация формы
     def __init__(self, *args, **kwargs):
         super(UserLoginForm, self).__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs['placeholder'] = 'Введите имя пользователя'
+        self.fields['username'].widget.attrs['placeholder'] = 'Введите имя пользователя'  # устанавливаем placeholder
         self.fields['password'].widget.attrs['placeholder'] = 'Введите пароль'
         self.fields['username'].required = True
         # self.fields['username'].validators = True
@@ -23,7 +23,7 @@ class UserLoginForm(AuthenticationForm):
     # def clean_username(self):
     #     data = self.cleaned_data['username']
     #     if not data.isalpha():
-    #         raise ValidationError('Имя пользователя не может содержать цирфы')
+    #         raise ValidationError('Имя пользователя не может содержать цифры')
     #     return data
 
 
@@ -38,7 +38,7 @@ class UserRegisterForm(UserCreationForm):
         self.fields['password1'].widget.attrs['placeholder'] = 'Введите пароль'
         self.fields['password2'].widget.attrs['placeholder'] = 'Повторите пароль'
         self.fields['last_name'].widget.attrs['placeholder'] = 'Ведите фамилию'
-        self.fields['last_name'].required = True
+        self.fields['last_name'].required = True  # Делаем поле обязательным к заполнению
         self.fields['first_name'].widget.attrs['placeholder'] = 'Введите имя'
         self.fields['email'].widget.attrs['placeholder'] = 'Введите email'
 
