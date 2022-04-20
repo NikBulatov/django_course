@@ -21,10 +21,11 @@ from django.urls import path, include
 from mainapp.views import index, products
 
 urlpatterns = [
-    path('admin/', admin.site.urls, name='admin'),
+    path('admin/', admin.site.urls),
     path('', index, name='index'),
     path('products/', include('mainapp.urls', namespace='mainapp')),
-    path('user/', include('authapp.urls', namespace='authapp'))
+    path('authapp/', include('authapp.urls', namespace='authapp')),
+    path('basket/', include('basket.urls', namespace='basket'))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from authapp.forms import UserLoginForm, UserRegisterForm, UserProfileForm
+from basket.models import Basket
 
 
 def login(request):
@@ -40,7 +41,7 @@ def register(request):
         form = UserRegisterForm(data=request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Вы успешно зарегистрировались')
+            messages.success(request, 'Вы успешно зарегистрировались!')
             return HttpResponseRedirect(reverse('authapp:login'))
         else:
             print(form.errors)
@@ -56,21 +57,25 @@ def register(request):
 @login_required
 def profile(request):
     if request.method == 'POST':
-        form = UserProfileForm(instance=request.user, data=request.POST, files=request.FILES)
+        form = UserProfileForm(instance=request.user, data=request.POST, files=request.FILES)  # data and files для обработки и обновления данных и файлов
         if form.is_valid():
             form.save()
+            messages.success(request, 'Данные успешно обновились!')
         else:
             print(form.errors)
     user_select = request.user
 
+    baskets = Basket.objects.filter(user=user_select)
     context = {
-        'title': 'GeekShop | Профайл',
-        'form': UserProfileForm(instance=user_select),
+        'title': 'GeekShop | Профиль',
+        'form': UserProfileForm(instance=user_select),  # instance - объект, с которым мы будем работать
+        'baskets': baskets,
     }
 
     return render(request, 'authapp/profile.html', context)
 
 
+@login_required
 def logout(request):
     auth.logout(request)
     return render(request, 'mainapp/index.html')

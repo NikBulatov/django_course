@@ -22,8 +22,8 @@ def index(request):
 
 
 def products(request):
-    products = read_file('fixtures/goods.json')
-    categories = read_file('fixtures/categories.json')
+    # products = read_file('fixtures/goods.json')
+    # categories = read_file('fixtures/categories.json')
 
     content = {
         'title': 'Geekshop - Каталог',

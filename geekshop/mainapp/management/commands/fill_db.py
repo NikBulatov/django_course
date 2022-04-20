@@ -12,7 +12,7 @@ def load_from_json(file_name):
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        User.objects.create_superuser(username='nikita', email='admin@mail.ru', password='123 ')
+        User.objects.create_superuser(username='nikita', email='admin@mail.ru', password='123')
         categories = load_from_json('mainapp/fixtures/category.json')
 
         ProductCategories.objects.all().delete()
