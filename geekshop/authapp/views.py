@@ -58,18 +58,24 @@ def register(request):
 def profile(request):
     if request.method == 'POST':
         form = UserProfileForm(instance=request.user, data=request.POST, files=request.FILES)  # data and files для обработки и обновления данных и файлов
-        if form.is_valid():
+        if form.is_valid():  # Проверяют валидность (корректность) заполнения формы
             form.save()
+            messages.set_level(request, messages.SUCCESS)
             messages.success(request, 'Данные успешно обновились!')
         else:
             print(form.errors)
     user_select = request.user
 
     baskets = Basket.objects.filter(user=user_select)
+    total_quantity = sum(basket.quantity for basket in baskets)
+    total_sum = sum(basket.sum() for basket in baskets)
+
     context = {
         'title': 'GeekShop | Профиль',
         'form': UserProfileForm(instance=user_select),  # instance - объект, с которым мы будем работать
         'baskets': baskets,
+        'total_quantity': total_quantity,
+        'total_sum': total_sum
     }
 
     return render(request, 'authapp/profile.html', context)

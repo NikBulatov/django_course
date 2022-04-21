@@ -3,10 +3,12 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from authapp.models import User
-from authapp.validator import validate_name
+from authapp.validator import validate_name, validate_email
 
 
 class UserLoginForm(AuthenticationForm):
+    username = forms.CharField(widget=forms.TextInput(), validators=[validate_name])
+
     class Meta:
         model = User  # С которой будем работать
         fields = ('username', 'password')  # Имена атрибутов модели, которые необходимо вывести на странице
@@ -16,7 +18,6 @@ class UserLoginForm(AuthenticationForm):
         self.fields['username'].widget.attrs['placeholder'] = 'Введите имя пользователя'  # устанавливаем placeholder
         self.fields['password'].widget.attrs['placeholder'] = 'Введите пароль'
         self.fields['username'].required = True
-        # self.fields['username'].validators = True
         for filed_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control py-4'
 
@@ -28,6 +29,8 @@ class UserLoginForm(AuthenticationForm):
 
 
 class UserRegisterForm(UserCreationForm):
+    email = forms.CharField(widget=forms.TextInput(), validators=[validate_email])
+
     class Meta:
         model = User
         fields = ('username', 'password1', 'password2', 'last_name', 'first_name', 'email')
