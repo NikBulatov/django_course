@@ -50,4 +50,4 @@ def basket_edit(request, basket_id, quantity):
         context = {'baskets': baskets}
 
         result = render_to_string('basket/basket.html', context)  # как render. Будет html код
-        return JsonResponse({'result': result})  #
+        return JsonResponse({'result': result})
