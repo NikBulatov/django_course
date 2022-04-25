@@ -22,9 +22,6 @@ def index(request):
 
 
 def products(request):
-    # products = read_file('fixtures/goods.json')
-    # categories = read_file('fixtures/categories.json')
-
     content = {
         'title': 'Geekshop - Каталог',
         'categories': ProductCategories.objects.all(),
@@ -32,5 +29,3 @@ def products(request):
     }
 
     return render(request, 'mainapp/products.html', content)
-
-#
