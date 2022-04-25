@@ -1,51 +1,31 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+import os
+import json
 
+from django.shortcuts import render
 
 # Create your views here.
+from mainapp.models import Product, ProductCategories
+
+MODULE_DIR = os.path.dirname(__file__)
 
 
-def index(request):  # create controller
+def read_file(name):
+    file_path = os.path.join(MODULE_DIR, name)
+    return json.load(open(file_path, encoding='utf-8'))
+
+
+def index(request):
     content = {
-        'title': 'GeekShop'
+        'title': 'Geekshop'
     }
-    # request, template (path to html)
-    return render(request, 'mainapp/index.html', context=content)
+    return render(request, 'mainapp/index.html', content)
 
 
 def products(request):
-    categories = [{'name': 'Новинки'},
-                  {'name': 'Одежда'},
-                  {'name': 'Обувь'},
-                  {'name': 'Аксессуары'}]
-
     content = {
-        'title': 'GeekShop - Каталог',
-        'categories': categories,
+        'title': 'Geekshop - Каталог',
+        'categories': ProductCategories.objects.all(),
+        'products': Product.objects.all()
     }
-    return render(request, 'mainapp/products.html', content)
 
-# def test(request):
-#     context = {'title': 'geekshop',
-#                'header': 'Welcome',
-#                'user': 'Niktia',
-#                'products': [
-#                    {'name': 'Худи черного цвета с монограммами adidas Originals', 'price': 6090},
-#                    {'name': 'Синяя куртка The North Face', 'price': 15630},
-#                    {'name': 'Коричневый спортивный oversize-топ ASOS DESIGN', 'price': 3500},
-#                    {'name': 'Черный рюкзак Nike Heritage', 'price': 2590},
-#                    {'name': 'Черные туфли на платформе с 3 парами люверсов Dr Martens 1461 Bex', 'price': 3260},
-#                    {'name': 'Темно-синие широкие строгие брюки ASOS DESIGN', 'price': 2890},
-#                ],
-#                'promotion': False,
-#                'products_promotion': [
-#                    {'name': 'Худи черного цвета с монограммами adidas Originals', 'price': 5000},
-#                    {'name': 'Синяя куртка The North Face', 'price': 5000},
-#                    {'name': 'Коричневый спортивный oversize-топ ASOS DESIGN', 'price': 5000},
-#                    {'name': 'Черный рюкзак Nike Heritage', 'price': 5000},
-#                    {'name': 'Черные туфли на платформе с 3 парами люверсов Dr Martens 1461 Bex', 'price': 5000},
-#                    {'name': 'Темно-синие широкие строгие брюки ASOS DESIGN', 'price': 5000},
-#                ]
-#
-#                }
-#     return render(request, 'mainapp/test.html', context=context)
+    return render(request, 'mainapp/products.html', content)
