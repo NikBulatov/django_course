@@ -31,11 +31,10 @@
                         <tbody>
                         {% for product in products %}
                             <tr>
-                                <td><a href="{% url 'adminapp:admin_products' product.id %}"
+                                <td><a href="{% url 'adminapp:update_product' product.id %}"
                                        style="color: dodgerblue">{{ product.name }}</a></td> {# Ссылка на обновление данных товара #}
-                                <td>{{ product.name }}</td>
-                                <td>{{ product.price }}</td>
                                 <td>{{ product.category }}</td>
+                                <td>{{ product.price }}</td>
                                 <td>{{ product.quantity }}</td>
                                 <td>{{ product.descriptions }}</td>
                                 <td class="text-center">

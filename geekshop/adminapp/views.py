@@ -1,14 +1,12 @@
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.contrib.auth.decorators import user_passes_test
-
-# Create your views here.
 from django.urls import reverse
-
+from django.contrib.auth.decorators import user_passes_test
 from adminapp.forms import AdminRegisterForm, AdminProfileForm, ProdcutCreateForm, ProductUpdateForm, CategoryUpdateForm, CategoryCreateForm
 from authapp.models import User
 from mainapp.models import Product, ProductCategories
+# Create your views here.
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -48,7 +46,8 @@ def admin_users_update(request, id):
     current_user = User.objects.get(id=id)
 
     if request.method == 'POST':
-        form = AdminProfileForm(data=request.POST, instance=current_user, files=request.FILES)
+        form = AdminProfileForm(
+            data=request.POST, instance=current_user, files=request.FILES)
         if form.is_valid():
             form.save()
             messages.set_level(request, messages.SUCCESS)
@@ -78,7 +77,7 @@ def admin_users_delete(request, id):  # делаем пользователя н
 def admin_products(request):
     context = {
         'title': 'Administration | Products',
-        'products': Product.objects.all(),  # получить список товаров QuerySet
+        'products': Product.objects.all()  # получить список товаров QuerySet
     }
     return render(request, 'adminapp/admin-product-read.html', context)
 
@@ -115,7 +114,8 @@ def create_product(request):
 def update_product(request, id):
     current_product = Product.objects.get(id=id)
     if request.method == 'POST':
-        form = ProductUpdateForm( data=request.POST, instance=current_product, files=request.FILES)
+        form = ProductUpdateForm(
+            data=request.POST, instance=current_product, files=request.FILES)
         if form.is_valid():
             form.save()
             messages.set_level(request, messages.SUCCESS)

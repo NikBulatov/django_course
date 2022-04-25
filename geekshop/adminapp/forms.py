@@ -75,7 +75,7 @@ class ProductUpdateForm(forms.ModelForm):
                   'descriptions', 'image')
 
     def __init__(self, *args, **kwargs):
-        super(ProdcutCreateForm, self).__init__(*args, **kwargs)
+        super(ProductUpdateForm, self).__init__(*args, **kwargs)
         self.fields['name'].widget.attrs['placeholder'] = 'Введите название продукта'
         self.fields['category'].widget.attrs['placeholder'] = 'Введите название категории'
         self.fields['quantity'].widget.attrs['placeholder'] = 'Введите количество'
