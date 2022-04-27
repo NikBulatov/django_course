@@ -5,7 +5,7 @@ from django.views.generic.base import View, ContextMixin
 
 # миксин для рендеринга
 class CustomDispatchMixin(View):
-
+    # Заменяет во view функции для рендеринга страниц
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def dispatch(self, request, *args, **kwargs):
         return super(CustomDispatchMixin, self).dispatch(request, *args, **kwargs)
@@ -19,10 +19,3 @@ class BaseClassContextMixin(ContextMixin):
         context = super(BaseClassContextMixin, self).get_context_data(**kwargs)
         context['title'] = self.title
         return context
-
-
-class UserDispatchMixin(View):
-
-    @method_decorator(user_passes_test(lambda u: u.is_authenticated))
-    def dispatch(self, request, *args, **kwargs):
-        return super(UserDispatchMixin, self).dispatch(request, *args, **kwargs)

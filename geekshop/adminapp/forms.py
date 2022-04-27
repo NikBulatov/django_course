@@ -49,17 +49,30 @@ class AdminProfileForm(UserChangeForm):
         self.fields['image'].widget.attrs['class'] = 'custom-file-input'
 
 
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ('name', 'category', 'quantity')
+
+    def __init__(self, *args, **kwargs):
+        super(ProdcutCreateForm, self).__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control py-4'
+
+
 class ProdcutCreateForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ('name', 'category', 'quantity',
-                  'descriptions', 'image')
+                  'descriptions', 'image', 'price')
 
     def __init__(self, *args, **kwargs):
         super(ProdcutCreateForm, self).__init__(*args, **kwargs)
         self.fields['name'].widget.attrs['placeholder'] = 'Введите название продукта'
         self.fields['category'].widget.attrs['placeholder'] = 'Введите название категории'
         self.fields['quantity'].widget.attrs['placeholder'] = 'Введите количество'
+        self.fields['price'].widget.attrs['placeholder'] = 'Введите стоимость'
         self.fields['descriptions'].widget.attrs['placeholder'] = 'Введите описание продукта'
         self.fields['image'].widget.attrs['placeholder'] = 'Добавьте фотографию'
 
@@ -79,6 +92,7 @@ class ProductUpdateForm(forms.ModelForm):
         self.fields['name'].widget.attrs['placeholder'] = 'Введите название продукта'
         self.fields['category'].widget.attrs['placeholder'] = 'Введите название категории'
         self.fields['quantity'].widget.attrs['placeholder'] = 'Введите количество'
+        self.fields['price'].widget.attrs['placeholder'] = 'Введите стоимость'
         self.fields['descriptions'].widget.attrs['placeholder'] = 'Введите описание продукта'
         self.fields['image'].widget.attrs['placeholder'] = 'Добавьте фотографию'
 
