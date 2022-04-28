@@ -52,7 +52,7 @@ class AdminProfileForm(UserChangeForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('name', 'category', 'quantity')
+        fields = ('name', 'category', 'quantity', 'price')
 
     def __init__(self, *args, **kwargs):
         super(ProdcutCreateForm, self).__init__(*args, **kwargs)
@@ -85,7 +85,7 @@ class ProductUpdateForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ('name', 'category', 'quantity',
-                  'descriptions', 'image')
+                  'descriptions', 'image', 'price')
 
     def __init__(self, *args, **kwargs):
         super(ProductUpdateForm, self).__init__(*args, **kwargs)

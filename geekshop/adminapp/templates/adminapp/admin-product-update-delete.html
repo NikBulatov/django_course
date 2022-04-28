@@ -1,7 +1,7 @@
 {% extends 'adminapp/base.html' %}
 {% block context %}
     <div class="container-fluid">
-        <h1 class="mt-4">Редактирование товара | {{ product.name }}</h1>
+        <h1 class="mt-4">{{ title | title }} | {{ product.name }}</h1>
         <div class="card-body">
             <form action="{% url 'adminapp:update_product' pk=product.id %}" method="post"
                   enctype="multipart/form-data">
