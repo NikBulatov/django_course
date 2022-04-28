@@ -71,6 +71,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # контекстый процессор позволяет прокинуть сущность во все шаблоны
+                'mainapp.context_processor.basket'
             ],
         },
     },

@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.mail import send_mail
 from django.contrib import auth, messages
 from django.contrib.auth.views import LoginView, LogoutView, FormView
 from django.views.generic import UpdateView
@@ -30,7 +31,7 @@ class RegisterFormView(FormView, BaseClassContextMixin, CustomDispatchMixin):
     def post(self, request, *args, **kwargs):
         form = UserRegisterForm(data=request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
             if self.send_verify_link(user):
                 messages.set_level(request, messages.SUCCESS)
                 messages.success(request, 'Вы успешно зарегистрировались!')
@@ -70,11 +71,18 @@ class ProfileFormView(UpdateView, BaseClassContextMixin, CustomDispatchMixin):
     form_class = UserProfileForm
     seccess_url = reverse_lazy('authapp:profile')
     title = 'GeekShop | Profile'
+    
+    # это заменяет контекстный процессор по корзине
+    # def get_context_data(self, **kwargs):
+    #     context = super(ProfileFormView, self).get_context_data()
+    #     context['baskets'] = Basket.objects.filter(user=self.request.user)
+    #     return context
 
     def form_valid(self, form):
         messages.set_level(self.request, messages.SUCCESS)
         messages.success(self.request, 'Данные успешно обновились!')
-        return super().form_valid(form)
+        super().form_valid(form)
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_object(self, queryset=None):
         return User.objects.get(id=self.request.user.pk)

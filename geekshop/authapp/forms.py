@@ -72,7 +72,7 @@ class UserProfileForm(UserChangeForm):
         self.fields['username'].widget.attrs['readonly'] = True  # Защищаем от изменений
         self.fields['email'].widget.attrs['readonly'] = True
 
-        for filed_name, field in self.fields.items():
+        for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control py-4'
 
         self.fields['image'].widget.attrs['class'] = 'custom-file-input'
