@@ -1,3 +1,5 @@
+import hashlib
+import random
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from django import forms
 from django.core.exceptions import ValidationError
@@ -45,8 +47,16 @@ class UserRegisterForm(UserCreationForm):
         self.fields['first_name'].widget.attrs['placeholder'] = 'Введите имя'
         self.fields['email'].widget.attrs['placeholder'] = 'Введите email'
 
-        for filed_name, field in self.fields.items():
+        for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control py-4'
+
+    def save(self, commit=True):
+        user = super(UserRegisterForm, self).save()
+        user.is_active = False
+        salt = hashlib.sha1(str(random.random()).encode('utf-8')).hexdigest()[:6]
+        user.activation_key = hashlib.sha1((user.email + salt).encode('utf-8')).hexdigest()
+        user.save()
+        return user
 
 
 class UserProfileForm(UserChangeForm):
