@@ -52,7 +52,7 @@ class UserDeleteView(DeleteView, CustomDispatchMixin):
     # По умолчанию метод post ворзвращает delete метод
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         self.object = self.get_object()  # == User.objects.get(id=id)
-        self.get_object.is_active = False
+        self.object.is_active = False
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
 

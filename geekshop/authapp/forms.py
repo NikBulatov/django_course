@@ -53,8 +53,10 @@ class UserRegisterForm(UserCreationForm):
     def save(self, commit=True):
         user = super(UserRegisterForm, self).save()
         user.is_active = False
-        salt = hashlib.sha1(str(random.random()).encode('utf-8')).hexdigest()[:6]
-        user.activation_key = hashlib.sha1((user.email + salt).encode('utf-8')).hexdigest()
+        salt = hashlib.sha1(
+            str(random.random()).encode('utf-8')).hexdigest()[:6]
+        user.activation_key = hashlib.sha1(
+            (user.email + salt).encode('utf-8')).hexdigest()
         user.save()
         return user
 
@@ -65,11 +67,12 @@ class UserProfileForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ('username', 'last_name', 'first_name', 'email', 'image', 'age')
+        fields = ('username', 'last_name',
+                  'first_name', 'email', 'image', 'age')
 
     def __init__(self, *args, **kwargs):
         super(UserProfileForm, self).__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs['readonly'] = True  # Защищаем от изменений
+        self.fields['username'].widget.attrs['readonly'] = True
         self.fields['email'].widget.attrs['readonly'] = True
 
         for field in self.fields.values():
