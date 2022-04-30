@@ -1,5 +1,4 @@
-from math import prod
-from django.urls import path
+from django.urls import path, include
 from mainapp.views import products, ProductDetail
 
 app_name = 'mainapp'
@@ -8,4 +7,5 @@ urlpatterns = [
     path('detail/<int:pk>/', ProductDetail.as_view(), name='detail'),
     path('category/<int:id_category>/', products, name='category'),
     path('page/<int:page>/', products, name='page'),
+    path('', include('social_django.urls', namespace='social'))
 ]

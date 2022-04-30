@@ -14,7 +14,6 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -152,3 +151,11 @@ EMAIL_FILE_PATH = 'tmp/emails'
 
 EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
 # py -m smtpd -n -c DebuggingServer localhost:25
+
+# 8153914
+# GaDccph1AnWPmi8GPL1x
+
+AUTHENTICATION_BACKEND = ('django.contrib.auth.backends.ModelBackend', 'cosial_core_backends.vk.VKOAuth2')
+SOCIAL_AUTH_VK_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_VK_OAUTH2_KEY')
+SOCIAL_AUTH_VK_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_VK_OAUTH2_SECRET')
+SOCIAL_AUTH_VK_OAUTH2_API_VERSION = os.getenv('SOCIAL_AUTH_VK_OAUTH2_API_VERSION')

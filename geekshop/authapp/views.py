@@ -61,7 +61,7 @@ class RegisterFormView(FormView, BaseClassContextMixin):
                 user.activation_key_expires = None
                 user.is_active = True
                 user.save()
-                auth.login(self, user)
+                auth.login(self, user, backend='django.contrib.auth.backends.ModelBackend')
             return render(self.request, 'authapp/verification.html')
         except NameError as e:
             return HttpResponseRedirect(reverse('index'))
