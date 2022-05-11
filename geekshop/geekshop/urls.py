@@ -18,7 +18,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from mainapp.views import index, products
+from mainapp.views import index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,7 +26,8 @@ urlpatterns = [
     path('products/', include('mainapp.urls', namespace='mainapp')),
     path('authapp/', include('authapp.urls', namespace='authapp')),
     path('basket/', include('basket.urls', namespace='basket')),
-    path('admins/', include('adminapp.urls', namespace='admins'))
+    path('admins/', include('adminapp.urls', namespace='admins')),
+    path('', include('social_django.urls', namespace='social'))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

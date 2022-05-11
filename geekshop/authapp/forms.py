@@ -6,18 +6,22 @@ from django.core.exceptions import ValidationError
 
 from authapp.models import User
 from authapp.validator import validate_name, validate_email
+from authapp.models import UserProfile
 
 
 class UserLoginForm(AuthenticationForm):
-    username = forms.CharField(widget=forms.TextInput(), validators=[validate_name])
+    username = forms.CharField(
+        widget=forms.TextInput(), validators=[validate_name])
 
     class Meta:
         model = User  # С которой будем работать
-        fields = ('username', 'password')  # Имена атрибутов модели, которые необходимо вывести на странице
+        # Имена атрибутов модели, которые необходимо вывести на странице
+        fields = ('username', 'password')
 
     def __init__(self, *args, **kwargs):
         super(UserLoginForm, self).__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs['placeholder'] = 'Введите имя пользователя'  # устанавливаем placeholder
+        # устанавливаем placeholder
+        self.fields['username'].widget.attrs['placeholder'] = 'Введите имя пользователя'
         self.fields['password'].widget.attrs['placeholder'] = 'Введите пароль'
         self.fields['username'].required = True
         for filed_name, field in self.fields.items():
@@ -31,11 +35,13 @@ class UserLoginForm(AuthenticationForm):
 
 
 class UserRegisterForm(UserCreationForm):
-    email = forms.CharField(widget=forms.TextInput(), validators=[validate_email])
+    email = forms.CharField(widget=forms.TextInput(),
+                            validators=[validate_email])
 
     class Meta:
         model = User
-        fields = ('username', 'password1', 'password2', 'last_name', 'first_name', 'email')
+        fields = ('username', 'password1', 'password2',
+                  'last_name', 'first_name', 'email')
 
     def __init__(self, *args, **kwargs):
         super(UserRegisterForm, self).__init__(*args, **kwargs)
@@ -43,7 +49,8 @@ class UserRegisterForm(UserCreationForm):
         self.fields['password1'].widget.attrs['placeholder'] = 'Введите пароль'
         self.fields['password2'].widget.attrs['placeholder'] = 'Повторите пароль'
         self.fields['last_name'].widget.attrs['placeholder'] = 'Введите фамилию'
-        self.fields['last_name'].required = True  # Делаем поле обязательным к заполнению
+        # Делаем поле обязательным к заполнению
+        self.fields['last_name'].required = True
         self.fields['first_name'].widget.attrs['placeholder'] = 'Введите имя'
         self.fields['email'].widget.attrs['placeholder'] = 'Введите email'
 
@@ -79,3 +86,17 @@ class UserProfileForm(UserChangeForm):
             field.widget.attrs['class'] = 'form-control py-4'
 
         self.fields['image'].widget.attrs['class'] = 'custom-file-input'
+
+
+class UserProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        exclude = ('user',)
+
+    def __init__(self, *args, **kwargs):
+        super(UserProfileUpdateForm, self).__init__(*args, **kwargs)
+        for filed_name, field in self.fields.items():
+            if filed_name != 'gender' and filed_name != 'langs':
+                field.widget.attrs['class'] = 'form-control py-4'
+            else:
+                field.widget.attrs['class'] = 'form-control'
