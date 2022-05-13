@@ -2,7 +2,7 @@ import os
 import json
 
 from django.shortcuts import render
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views.generic.detail import DetailView
 
 # Create your views here.
@@ -37,7 +37,7 @@ def products(request, id_category=None, page=1):
         product_pagination = pagination.page(pagination.num_pages)
 
     content = {
-        'title': 'Geekshop - Каталог',
+        'title': 'GeekShop | Catalog',
         'categories': ProductCategories.objects.all(),
         'products': product_pagination
     }

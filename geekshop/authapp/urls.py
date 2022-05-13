@@ -8,6 +8,5 @@ urlpatterns = [
     path('register/', RegisterFormView.as_view(), name='register'),
     path('profile/', ProfileFormView.as_view(), name='profile'),
     path('logout/', Logout.as_view(), name='logout'),
-    path('verify/<str:email>/<str:activate_key>/',
-         RegisterFormView.verify, name='verify')
+    path('verify/<str:email>/<str:activate_key>/', RegisterFormView.verify, name='verify')
 ]

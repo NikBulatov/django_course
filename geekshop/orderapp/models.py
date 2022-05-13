@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-from geekshop.geekshop import settings
+from geekshop import settings
 from mainapp.models import Product
 
 
@@ -24,9 +24,8 @@ class Order(models.Model):
                              on_delete=models.CASCADE)
     created = models.DateTimeField(verbose_name='Создан', auto_now=True)
     updated = models.DateTimeField(verbose_name='Обновлён', auto_now_add=True)
-    paided = models.DateTimeField(verbose_name='Оплачен')
-    status = models.CharField(choices=ORDER_STATUS_CHOICES,
-                              verbose_name='Статус', max_length=3, default=FORMING)
+    paid = models.DateTimeField(verbose_name='Оплачен', null=True, blank=True)
+    status = models.CharField(choices=ORDER_STATUS_CHOICES, verbose_name='Статус', max_length=3, default=FORMING)
     is_active = models.BooleanField(verbose_name='Активен', default=True)
 
     def __str__(self) -> str:
@@ -53,12 +52,9 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, verbose_name='Заказ',
-                              related_name='orderitems', on_delete=models.CASCADE)
-    product = models.ForeignKey(
-        Product, verbose_name='Товары', on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(
-        verbose_name='Количество', default=0)
+    order = models.ForeignKey(Order, verbose_name='Заказ', related_name='orderitems', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, verbose_name='Товары', on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(verbose_name='Количество', default=0)
 
     def get_product_cost(self):
         return self.product.price * self.quantity
