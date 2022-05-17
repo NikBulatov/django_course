@@ -17,8 +17,8 @@ class OrderListView(ListView, BaseClassContextMixin):
 class OrderCreateView(CreateView, BaseClassContextMixin):
     model = Order
     fields = []
-    title = 'GeekShop | Order Create'
     success_url = reverse_lazy('orders:list')
+    title = 'GeekShop | Create Order'
 
     def get_context_data(self, **kwargs):
         context = super(OrderCreateView, self).get_context_data()
@@ -27,16 +27,17 @@ class OrderCreateView(CreateView, BaseClassContextMixin):
             formset = order_form_set(self.request.POST)
         else:
             basket_item = Basket.objects.filter(user=self.request.user)
-            if not basket_item:
+            if basket_item:
+                order_form_set = inlineformset_factory(Order, OrderItem, form=OrderItemsForm, extra=basket_item.count())
                 formset = order_form_set()
+
+                for num, form in enumerate(formset.forms):
+                    form.initial['product'] = basket_item[num].product
+                    form.initial['quantity'] = basket_item[num].quantity
+                    form.initial['price'] = basket_item[num].product.price
+                basket_item.delete()
             else:
-                order_form_set = inlineformset_factory(Order, OrderItem, OrderItemsForm, extra=basket_item.count())
                 formset = order_form_set()
-                for idx, form in enumerate(formset.forms):
-                    form.initinal['product'] = basket_item[idx].product
-                    form.initinal['quantity'] = basket_item[idx].quantity
-                    form.initinal['price'] = basket_item[idx].product.price
-                # basket_item.delete()
 
         context['orderitems'] = formset
         return context
@@ -44,6 +45,7 @@ class OrderCreateView(CreateView, BaseClassContextMixin):
     def form_valid(self, form):
         context = self.get_context_data()
         orderitems = context['orderitems']
+
         with transaction.atomic():
             form.instance.user = self.request.user
             self.object = form.save()
@@ -56,6 +58,11 @@ class OrderCreateView(CreateView, BaseClassContextMixin):
 
 
 class OrderUpdateView(UpdateView, BaseClassContextMixin):
+    model = Order
+    fields = []
+    success_url = reverse_lazy('orders:list')
+    title = 'GeekShop | Update Order'
+
     def get_context_data(self, **kwargs):
         context = super(OrderUpdateView, self).get_context_data()
         order_form_set = inlineformset_factory(Order, OrderItem, OrderItemsForm, extra=1)  # extra - это поле
@@ -65,7 +72,7 @@ class OrderUpdateView(UpdateView, BaseClassContextMixin):
             formset = order_form_set(instance=self.object)
             for idx, form in enumerate(formset.forms):
                 if form.instance.pk:
-                    form.initinal['price'] = form.instance.product.price
+                    form.initial['price'] = form.instance.product.price
 
         context['orderitems'] = formset
         return context

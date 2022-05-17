@@ -1,7 +1,7 @@
+from django.conf import settings
 from django.db import models
 
 # Create your models here.
-from geekshop import settings
 from mainapp.models import Product
 
 
@@ -20,8 +20,7 @@ class Order(models.Model):
                             (READY, 'Готов к выдаче'),
                             (CANCEL, 'Отменён'))
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created = models.DateTimeField(verbose_name='Создан', auto_now=True)
     updated = models.DateTimeField(verbose_name='Обновлён', auto_now_add=True)
     paid = models.DateTimeField(verbose_name='Оплачен', null=True, blank=True)
@@ -32,7 +31,6 @@ class Order(models.Model):
         return f'Текущий заказ {self.pk}'
 
     def get_total_cost(self):
-        # забираем все связанные данные по объекту (записи) У заказа забрали все товары
         items = self.orderitems.select_related()
         return sum(list(map(lambda x: x.get_product_cost(), items)))
 
