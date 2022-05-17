@@ -18,11 +18,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from mainapp.views import index
+from mainapp.views import MainPageView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index, name='index'),
+    path('', MainPageView.as_view(), name='index'),
     path('products/', include('mainapp.urls', namespace='mainapp')),
     path('authapp/', include('authapp.urls', namespace='authapp')),
     path('basket/', include('basket.urls', namespace='basket')),

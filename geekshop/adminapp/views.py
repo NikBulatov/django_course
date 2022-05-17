@@ -4,12 +4,17 @@ from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, UpdateView, DetailView, DeleteView, TemplateView, CreateView
-from adminapp.forms import AdminRegisterForm, AdminProfileForm, ProdcutCreateForm, ProductUpdateForm, CategoryUpdateForm, CategoryCreateForm
+from django.views.generic import ListView, UpdateView, DeleteView, TemplateView, CreateView
+from adminapp.forms import (AdminRegisterForm,
+                            AdminProfileForm,
+                            ProdcutCreateForm,
+                            ProductUpdateForm,
+                            CategoryUpdateForm,
+                            CategoryCreateForm)
 from adminapp.mixins import BaseClassContextMixin, CustomDispatchMixin
-from adminapp.forms import ProductForm
 from mainapp.models import Product, ProductCategories
 from authapp.models import User
+
 
 # Create your views here.
 
