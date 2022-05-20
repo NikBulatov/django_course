@@ -4,7 +4,8 @@ from orderapp.views import (OrderListView,
                             OrderUpdateView,
                             OrderReadView,
                             OrderDeleteView,
-                            order_forming_complete)
+                            order_forming_complete,
+                            get_product_price)
 
 app_name = 'orderapp'
 urlpatterns = [
@@ -13,4 +14,7 @@ urlpatterns = [
     path('update/<int:pk>/', OrderUpdateView.as_view(), name='update'),
     path('delete/<int:pk>/', OrderDeleteView.as_view(), name='delete'),
     path('read/<int:pk>/', OrderReadView.as_view(), name='read'),
-    path('forming_complete/<int:pk>/', order_forming_complete, name='order_forming_complete')]
+    path('forming_complete/<int:pk>/', order_forming_complete, name='order_forming_complete'),
+    path('product/<int:pk>/price/', get_product_price, name='product_price'),
+
+]
