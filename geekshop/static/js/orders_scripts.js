@@ -79,22 +79,21 @@ window.onload = function () {
 
     }
 
-    $(document).on('change','.order_form select',function (){
-    // $('.order_form select').change(function () {
+    $(document).on('change', '.order_form select', function () {
+        // select - это выборка из формы. .change - при смене (выполняем функционал)
+        // $('.order_form select').change(function () {
 
         let target = event.target
         orderItemNum = parseInt(target.name.replace('orderitems-', '').replace('-product', ''));
-        console.log(target)
-        let orderItemProductPK = target.options[target.selectedIndex].value;
+        console.log(target);
+        let orderItemProductPK = target.options[target.selectedIndex].value;  // вытаскиваем id товара
 
         if (orderItemProductPK) {
             $.ajax({
-                url: '/orderapp/product/' + orderItemProductPK + '/price/',
+                url: `/orderapp/product/${orderItemProductPK}/price/`,
                 success: function (data) {
-                    let price_html = '<span class="orderitems-' + orderItemNum + '-price">'
-                        + data.price.toString().replace('.', ',') + '</span> руб';
-
-                    let current_tr = $('.order_form table').find('tr:eq('+(orderItemNum+1)+')');
+                    let price_html = `<span class="orderitems-${orderItemProductPK}-price">${data.price.toString().replace('.', ',')}</span> руб`;
+                    let current_tr = $('.order_form table').find(`tr:eq(${orderItemNum + 1})`);
                     current_tr.find('td:eq(2)').html(price_html)
                 }
             })
