@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-36rdihn+_3$m(3-^9p=jl+l^pfpjs+*inam4*vkp@w0qo!k0(q
 load_dotenv(BASE_DIR / '.env')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -86,16 +86,24 @@ WSGI_APPLICATION = 'geekshop.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
-        'NAME': 'geekshop',
-        'ENGINE': 'django.db.backends.postgresql',
-        'USER': 'postgres'
+SERVER = True if not DEBUG else False
+if SERVER:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+else:
+    DATABASES = {
+        'default': {
+            'NAME': 'geekshop',
+            'ENGINE': 'django.db.backends.postgresql',
+            'USER': 'postgres'
+        }
+    }
+    STATICFILES_DIRS = (BASE_DIR / 'static',)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -133,8 +141,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = (BASE_DIR / 'static',)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -183,8 +189,3 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
 )
-
-# Server
-# 80.78.254.144:22
-# Логин: root
-# Пароль: yhL!g@7+Ek|C
