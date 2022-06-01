@@ -68,7 +68,7 @@ class OrderUpdateView(UpdateView, BaseClassContextMixin):
 
     def get_context_data(self, **kwargs):
         context = super(OrderUpdateView, self).get_context_data()
-        order_form_set = inlineformset_factory(Order, OrderItem, OrderItemsForm, extra=1)  # extra - это поле
+        order_form_set = inlineformset_factory(Order, OrderItem, OrderItemsForm)
         if self.request.POST:
             formset = order_form_set(self.request.POST, instance=self.object)
         else:

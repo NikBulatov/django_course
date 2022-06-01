@@ -45,12 +45,13 @@ INSTALLED_APPS = [
     'authapp',
     'basket',
     'adminapp',
-    'social_django',
     'orderapp',
 
     # install
     'debug_toolbar',
     'template_profiler_panel',
+    'social_django',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
@@ -78,7 +79,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                # контекстый процессор позволяет прокинуть сущность во все шаблоны
                 'mainapp.context_processor.basket',
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect'
@@ -172,11 +172,7 @@ EMAIL_FILE_PATH = 'tmp/emails'
 # EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
 # py -m smtpd -n -c DebuggingServer localhost:25
 
-# 8153914
-# GaDccph1AnWPmi8GPL1x
-
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend', 'social_core.backends.vk.VKOAuth2')
+AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', 'social_core.backends.vk.VKOAuth2')
 SOCIAL_AUTH_VK_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_VK_OAUTH2_KEY')
 SOCIAL_AUTH_VK_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_VK_OAUTH2_SECRET')
 SOCIAL_AUTH_VK_OAUTH2_API_VERSION = '5.131'

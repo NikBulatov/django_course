@@ -26,7 +26,9 @@ class ProductsView(TemplateView, BaseClassContextMixin):
     template_name = 'mainapp/products.html'
 
     def get_context_data(self, id_category=None, page=1):
-        products_ = Product.objects.filter(category_id=id_category) if id_category else Product.objects.all()
+        products_ = Product.objects.filter(
+            category_id=id_category).select_related() if id_category else Product.objects.all().select_related(
+            'category')  # указать по какому полю вытаскивать записи из БД
 
         pagination = Paginator(products_, per_page=3)
         try:

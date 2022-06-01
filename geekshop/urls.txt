@@ -1,0 +1,14 @@
+http://127.0.0.1/
+http://127.0.0.1/authapp/login/ POST username=nikita&password=123
+http://127.0.0.1/products/
+http://127.0.0.1/products/category/1/
+http://127.0.0.1/products/category/2/
+http://127.0.0.1/products/category/3/
+http://127.0.0.1/products/category/4/
+http://127.0.0.1/products/category/5/
+http://127.0.0.1/order/
+http://127.0.0.1/order/update/1/
+http://127.0.0.1/authapp/profile/
+http://127.0.0.1/admins/users/
+http://127.0.0.1/admins/categories/
+http://127.0.0.1/admins/products/
