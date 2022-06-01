@@ -16,8 +16,9 @@ def save_user_profile(backend, user, response, *args, **kwargs):
 
     api_url = urlunparse(('http', 'api.vk.com', 'method/users.get', None,
                           urlencode(
-                            #   Объекты пользователя в VK
-                              OrderedDict(fields=','.join(('bdate', 'sex', 'about', 'personal', 'photo_200')), access_token=response['access_token'],
+                              #   Объекты пользователя в VK
+                              OrderedDict(fields=','.join(('bdate', 'sex', 'about', 'personal', 'photo_200')),
+                                          access_token=response['access_token'],
                                           v=5.131)), None))
 
     resp = requests.get(api_url)

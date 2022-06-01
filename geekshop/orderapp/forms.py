@@ -22,5 +22,6 @@ class OrderItemsForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(OrderItemsForm, self).__init__(*args, **kwargs)
+        self.fields['product'].queryset = Product.get_items().select_related()
         for filed in self.fields.values():
             filed.widget.attrs['class'] = 'form-control'
