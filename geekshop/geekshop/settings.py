@@ -99,7 +99,8 @@ if not SERVER:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    STATICFILES_DIRS = (BASE_DIR / 'static',)
+
 else:
     DATABASES = {
         'default': {

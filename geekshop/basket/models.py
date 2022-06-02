@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils.functional import cached_property
 # Create your models here.
 from authapp.models import User
 from mainapp.models import Product
@@ -33,15 +33,16 @@ class Basket(models.Model):
     def sum(self):
         return self.quantity * self.product.price
 
+    @cached_property
     def get_basket(self):
-        return Basket.objects.filter(user=self.user)
+        return Basket.objects.filter(user=self.user).select_related()
 
     def total_sum(self):
-        baskets = self.get_basket()
+        baskets = self.get_basket
         return sum(basket.sum() for basket in baskets)
 
     def total_quantity(self):
-        baskets = self.get_basket()
+        baskets = self.get_basket
         return sum(basket.quantity for basket in baskets)
 
     @staticmethod
