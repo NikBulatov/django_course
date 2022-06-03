@@ -14,8 +14,7 @@ class User(AbstractUser):
     age = models.PositiveIntegerField(default=18)
 
     activation_key = models.CharField(max_length=128, blank=True)
-    activation_key_expires = models.DateTimeField(
-        auto_now=True, blank=True, null=True)
+    activation_key_expires = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     def is_activation_key_expired(self) -> bool:
         if now() <= self.activation_key_expires + timedelta(hours=48):
@@ -32,13 +31,10 @@ class UserProfile(models.Model):
         (FEMALE, 'Ж'),
     )
 
-    user = models.OneToOneField(
-        User, unique=True, null=True, db_index=True, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, unique=True, null=True, db_index=True, on_delete=models.CASCADE)
     about = models.TextField(verbose_name='О себе', blank=True, null=False)
-    gender = models.CharField(
-        verbose_name='Пол', choices=GENDER_CHOICES, blank=True, max_length=2)
-    langs = models.CharField(
-        verbose_name='Язык', blank=True, max_length=5, default='RU')
+    gender = models.CharField(verbose_name='Пол', choices=GENDER_CHOICES, blank=True, max_length=2)
+    langs = models.CharField(verbose_name='Язык', blank=True, max_length=5, default='RU')
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
@@ -49,6 +45,3 @@ class UserProfile(models.Model):
     def save_user_profile(sender, instance, created, **kwargs):
         if not created:
             instance.userprofile.save()
-
-    # Pipeline == action for backend
-

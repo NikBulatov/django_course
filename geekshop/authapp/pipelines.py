@@ -4,7 +4,7 @@ from datetime import datetime
 from urllib.parse import urlunparse, urlencode
 
 from django.utils import timezone
-from social_core.exceptions import AuthException, AuthForbidden
+from social_core.exceptions import AuthForbidden
 
 from authapp.models import UserProfile
 from geekshop.settings import MEDIA_ROOT
@@ -15,11 +15,8 @@ def save_user_profile(backend, user, response, *args, **kwargs):
         return
 
     api_url = urlunparse(('http', 'api.vk.com', 'method/users.get', None,
-                          urlencode(
-                              #   Объекты пользователя в VK
-                              OrderedDict(fields=','.join(('bdate', 'sex', 'about', 'personal', 'photo_200')),
-                                          access_token=response['access_token'],
-                                          v=5.131)), None))
+                          urlencode(OrderedDict(fields=','.join(('bdate', 'sex', 'about', 'personal', 'photo_200')),
+                                                access_token=response['access_token'], v=5.131)), None))
 
     resp = requests.get(api_url)
     if resp.status_code != 200:
