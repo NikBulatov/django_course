@@ -54,19 +54,16 @@ def basket_remove(request, basket_id):
 
 @login_required
 def basket_edit(request, basket_id, quantity):
-    if request.is_ajax():  # если технология AJAX используется
-        # получить объект, с которым взаимодействуют
+    if request.is_ajax():
         basket = Basket.objects.get(id=basket_id)
         if quantity > 0:
             basket.quantity = quantity
             basket.save()
         else:
-            basket.delete()  # если количество будет равно 0, то объект удалится
+            basket.delete()
 
-        # берём корзины конкретного user
         baskets = Basket.objects.filter(user=request.user)
         context = {'baskets': baskets}
 
-        # как render. Будет html код
         result = render_to_string('basket/basket.html', context)
         return JsonResponse({'result': result})

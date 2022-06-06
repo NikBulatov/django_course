@@ -6,12 +6,14 @@ from django.views.generic import UpdateView
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
+from django.views.generic import UpdateView
 
 # Create your views here.
 
 from authapp.forms import UserLoginForm, UserRegisterForm, UserProfileForm, UserProfileUpdateForm
 from adminapp.mixins import BaseClassContextMixin, UserDispatchMixin
 from authapp.models import User
+from basket.models import Basket
 
 
 class Login(LoginView, BaseClassContextMixin):
@@ -46,8 +48,7 @@ class RegisterFormView(FormView, BaseClassContextMixin):
 
     @staticmethod
     def send_verify_link(user):
-        verify_link = reverse('authapp:verify', args=[
-            user.email, user.activation_key])
+        verify_link = reverse('authapp:verify', args=[user.email, user.activation_key])
         subject = f'Для активации учетной записи {user.username} пройдите по ссылке'
         message = f'Для подтверждения учетной записи {user.username} на портале \n {settings.DOMAIN_NAME}{verify_link}'
         return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
@@ -63,7 +64,7 @@ class RegisterFormView(FormView, BaseClassContextMixin):
                 auth.login(
                     self, user, backend='django.contrib.auth.backends.ModelBackend')
             return render(self.request, 'authapp/verification.html')
-        except NameError as e:
+        except NameError:
             return HttpResponseRedirect(reverse('index'))
 
 
@@ -75,8 +76,7 @@ class ProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
     title = 'GeekShop | Profile'
 
     def post(self, request, *args, **kwargs):
-        form = UserProfileForm(
-            data=request.POST, files=request.FILES, instance=request.user)
+        form = UserProfileForm(data=request.POST, files=request.FILES, instance=request.user)
         profile_form = UserProfileUpdateForm(
             data=request.POST, files=request.FILES, instance=request.user.userprofile)
         if form.is_valid() and profile_form.is_valid():
@@ -85,8 +85,7 @@ class ProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
 
     def get_context_data(self, **kwargs):
         context = super(ProfileFormView, self).get_context_data()
-        context['profile'] = UserProfileUpdateForm(
-            instance=self.request.user.userprofile)
+        context['profile'] = UserProfileUpdateForm(instance=self.request.user.userprofile)
         return context
 
     def form_valid(self, form):

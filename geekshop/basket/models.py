@@ -33,21 +33,35 @@ class Basket(models.Model):
     def sum(self):
         return self.quantity * self.product.price
 
+    @cached_property
+    def get_items_cached(self):
+        return self.user.basket.select_related()
+
     def get_basket(self):
         return Basket.objects.filter(user=self.user).select_related()
 
     def total_sum(self):
-        baskets = self.get_item_cached
+        baskets = self.get_items_cached
         return sum(basket.sum() for basket in baskets)
 
     def total_quantity(self):
-        baskets = self.get_item_cached
+        baskets = self.get_items_cached
         return sum(basket.quantity for basket in baskets)
+
+    # def save(self, *args, **kwargs):
+    #     if self.pk:
+    #         item = self.get_item(int(self.pk))
+    #         self.product.quantity -= self.quantity - item
+    #     else:
+    #         self.product.quantity -= self.quantity
+    #     self.product.save()
+    #     super(Basket, self).save(*args, **kwargs)
+    #
+    # def delete(self, *args, **kwargs):
+    #     self.product.quantity += self.quantity
+    #     self.save()
+    #     super(Basket, self).delete(*args, **kwargs)
 
     @staticmethod
     def get_item(pk):
         return Basket.objects.get(pk=pk).quantity
-
-    @cached_property
-    def get_item_cached(self):
-        return self.user.basket.select_related()

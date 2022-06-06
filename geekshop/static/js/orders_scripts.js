@@ -6,7 +6,7 @@ window.onload = function () {
 
         $.ajax(
             {
-                url: "/basket/edit/" + t_href.name + "/" + t_href.value + "/",
+                url: `/basket/edit/${t_href.name}/${t_href.value}/`,
                 success: function (data) {
                     $('.basket_list').html(data.result)
                 }
@@ -16,18 +16,14 @@ window.onload = function () {
 
     $('.card_add_basket').on('click', 'button[type="button"]', function () {
 
-        let t_href = event.target.value; // id объекта
+        let t_href = event.target.value;
         console.log(t_href);
 
-        $.ajax(
-            {
-                url: "/basket/add/" + t_href + "/",
-                success: function (data) {
-                    $('.card_add_basket').html(data.result)
-                }
+        $.ajax({
+            url: `/basket/add/${t_href}/`, success: function (data) {
+                $('.card_add_basket').html(data.result);
             }
-        )
-
+        })
     })
 
 
@@ -40,10 +36,10 @@ window.onload = function () {
     let quantityArray = [];
     let priceArray = [];
 
-    let totalForms = parseInt($('input[name=orderitems-TOTAL_FORMS]').val())
+    let totalForms = parseInt($('input[name=orderitems-TOTAL_FORMS]').val());
 
-    let orderTotalCost = parseInt(orderTotalCostSelector.text().replace(',', '.')) || 0; // либо текст, либо 0
-    let orderTotalQuantity = parseInt(orderTotalQuantitySelector.text()) || 0
+    let orderTotalCost = parseInt(orderTotalCostSelector.text().replace(',', '.')) || 0;
+    let orderTotalQuantity = parseInt(orderTotalQuantitySelector.text()) || 0;
 
     for (let i = 0; i < totalForms; i++) {
         quantity = parseInt($(`input[name=id_ordertems-${i}-quantity]`).val());
@@ -79,10 +75,11 @@ window.onload = function () {
         console.log(target);
         orderItemNum = parseInt(target.name.replace('orderitems-', '').replace('-DELETE', ''));
         if (target.checked) {
-            deltaQuantity = -quantityArray[orderItemNum]
+            deltaQuantity = -quantityArray[orderItemNum];
         } else {
-            deltaQuantity = quantityArray[orderItemNum]
+            deltaQuantity = quantityArray[orderItemNum];
         }
+        orderSummaryUpdate(priceArray[orderItemNum], deltaQuantity);
     })
 
 
@@ -90,47 +87,67 @@ window.onload = function () {
         deltaCost = orderItemPrice * deltaQuantity;
         orderTotalCost = Number((orderTotalCost + deltaCost).toFixed(2));
         orderTotalQuantity += deltaQuantity;
-        $('.order_total_cost').html(orderTotalCost.toString());
-        $('.order_total_quantity').html(orderTotalQuantity.toString() + ',00');
+        orderTotalCostSelector.html(orderTotalCost.toString());
+        orderTotalQuantitySelector.html(orderTotalQuantity.toString() + ',00');
 
-    }
 
-    $('.formset-row').formset({
-        addText: 'Add product',
-        deleteText: 'Delete product',
-        prefix: 'orderItems',
-        removed: deleteOrderItem
-    })
+        $('.formset-row').formset({
+            addText: 'Add product',
+            deleteText: 'Delete product',
+            prefix: 'orderItems',
+            removed: deleteOrderItem
+        });
 
-    function deleteOrderItem(row) {
-        let targetName = row[0].querySelector('input[type=nubmer]').name;
-        console.log(targetName);
-        orderItemNum = parseInt(targetName.replace('orderitems-', '').replace('-quantity', ''));
-        deltaQuantity = -quantityArray[orderItemNum];
-        orderSummaryUpdate(priceArray[orderItemNum], deltaQuantity);
-
-    }
-
-    $(document).on('change', '.order_form select', function () {
-        // select - это выборка из формы. .change - при смене (выполняем функционал)
-        // $('.order_form select').change(function () {
-
-        let target = event.target
-        orderItemNum = parseInt(target.name.replace('orderitems-', '').replace('-product', ''));
-        console.log(target);
-        let orderItemProductPK = target.options[target.selectedIndex].value;  // вытаскиваем id товара
-
-        if (orderItemProductPK) {
-            $.ajax({
-                url: `/orderapp/product/${orderItemProductPK}/price/`,
-                success: function (data) {
-                    let price_html = `<span class="orderitems-${orderItemProductPK}-price">${data.price.toString().replace('.', ',')}</span> руб`;
-                    let current_tr = $('.order_form table').find(`tr:eq(${orderItemNum + 1})`);
-                    current_tr.find('td:eq(2)').html(price_html)
-                }
-            })
+        function deleteOrderItem(row) {
+            let targetName = row[0].querySelector('input[type=number]').name;
+            console.log(targetName);
+            orderItemNum = parseInt(
+                targetName.replace('orderitems-', '').replace('-quantity', ''));
+            deltaQuantity = -quantityArray[orderItemNum];
+            orderSummaryUpdate(priceArray[orderItemNum], deltaQuantity);
         }
 
+        $(document).on('change', '.order_form select', function () {
+            let target = event.target;
+            orderItemNum = parseInt(target.name.replace('orderitems-', '').replace('-product', ''));
+            console.log(target);
+            let orderItemProductPK = target.options[target.selectedIndex].value;  // вытаскиваем id товара
 
-    })
-};
+            if (orderItemProductPK) {
+                $.ajax({
+                    url: `/orderapp/product/${orderItemProductPK}/price/`, success: function (data) {
+                        let price_html = `<span class="orderitems-${orderItemNum}-price">${data.price.toString().replace('.', ',')}</span> руб`;
+                        let current_tr = $('.order_form table').find(`tr:eq(${orderItemNum + 1})`);
+                        current_tr.find('td:eq(2)').html(price_html)
+                    }
+                })
+            }
+        })
+
+        $(document).on('change', '.order_form select', function () {
+
+            let target = event.target;
+            orderItemNum = parseInt(target.name.replace('orderitems-', '').replace('-product', ''));
+            let orderItemProductPK = target.options[target.selectedIndex].value;
+
+            console.log(orderItemNum)
+            console.log(orderItemProductPK)
+
+            if (orderItemProductPK) {
+                $.ajax({
+                    url: `/orders/product/${orderItemProductPK}/price/`, success: function (data) {
+                        if (data.price) {
+                            priceArray[orderItemNum] = parseFloat(data.price)
+                            if (isNaN(quantityArray[orderItemNum])) {
+                                quantityArray[orderItemNum] = 0;
+                            }
+                            let price_html = `<span class="orderitems-${orderItemNum}-price">${data.price.toString().replace('.', ',')}</span> руб`;
+                            let current_tr = $('.order_form table').find(`tr:eq(${orderItemNum + 1})`);
+                            current_tr.find('td:eq(2)').html(price_html)
+                        }
+                    }
+                })
+            }
+        })
+    }
+}

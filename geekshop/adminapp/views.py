@@ -7,7 +7,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, UpdateView, DeleteView, TemplateView, CreateView
 from adminapp.forms import (AdminRegisterForm,
                             AdminProfileForm,
-                            ProdcutCreateForm,
+                            ProductCreateForm,
                             ProductUpdateForm,
                             CategoryUpdateForm,
                             CategoryCreateForm)
@@ -54,7 +54,6 @@ class UserDeleteView(DeleteView, CustomDispatchMixin):
     form_class = AdminProfileForm
     success_url = reverse_lazy('adminapp:admin_users')
 
-    # По умолчанию метод post ворзвращает delete метод
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         self.object = self.get_object()  # == User.objects.get(id=id)
         self.object.is_active = False
@@ -69,7 +68,7 @@ class ProductsListView(ListView, BaseClassContextMixin, CustomDispatchMixin):
     context_object_name = 'products'
 
 
-class ProdcutDeleteView(DeleteView, CustomDispatchMixin):
+class ProductDeleteView(DeleteView, CustomDispatchMixin):
     model = Product
     template_name = 'adminapp/admin-product-update-delete.html'
     form_class = ProductUpdateForm
@@ -79,7 +78,7 @@ class ProdcutDeleteView(DeleteView, CustomDispatchMixin):
 class ProductCreateView(CreateView, BaseClassContextMixin, CustomDispatchMixin):
     model = Product
     template_name = 'adminapp/admin-product-create.html'
-    form_class = ProdcutCreateForm
+    form_class = ProductCreateForm
     title = 'Administration | Create Product'
     success_url = reverse_lazy('adminapp:admin_products')
 

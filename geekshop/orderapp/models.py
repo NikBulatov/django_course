@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 
 # Create your models here.
+
 from mainapp.models import Product
 
 
@@ -27,7 +28,7 @@ class Order(models.Model):
     status = models.CharField(choices=ORDER_STATUS_CHOICES, verbose_name='Статус', max_length=3, default=FORMING)
     is_active = models.BooleanField(verbose_name='Активен', default=True)
 
-    def __str__(self) -> str:
+    def __str__(self):
         return f'Текущий заказ {self.pk}'
 
     def get_total_cost(self):

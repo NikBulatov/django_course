@@ -55,20 +55,20 @@ class ProductForm(forms.ModelForm):
         fields = ('name', 'category', 'quantity', 'price')
 
     def __init__(self, *args, **kwargs):
-        super(ProdcutCreateForm, self).__init__(*args, **kwargs)
+        super(ProductForm, self).__init__(*args, **kwargs)
 
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control py-4'
 
 
-class ProdcutCreateForm(forms.ModelForm):
+class ProductCreateForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ('name', 'category', 'quantity',
                   'descriptions', 'image', 'price')
 
     def __init__(self, *args, **kwargs):
-        super(ProdcutCreateForm, self).__init__(*args, **kwargs)
+        super(ProductCreateForm, self).__init__(*args, **kwargs)
         self.fields['name'].widget.attrs['placeholder'] = 'Введите название продукта'
         self.fields['category'].widget.attrs['placeholder'] = 'Введите название категории'
         self.fields['quantity'].widget.attrs['placeholder'] = 'Введите количество'

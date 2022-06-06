@@ -10,8 +10,7 @@ from authapp.models import UserProfile
 
 
 class UserLoginForm(AuthenticationForm):
-    username = forms.CharField(
-        widget=forms.TextInput(), validators=[validate_name])
+    username = forms.CharField(widget=forms.TextInput(), validators=[validate_name])
 
     class Meta:
         model = User  # С которой будем работать

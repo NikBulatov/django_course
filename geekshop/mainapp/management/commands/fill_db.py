@@ -1,5 +1,6 @@
 import json
 from django.core.management.base import BaseCommand
+from chardet import detect
 
 from authapp.models import User
 from mainapp.models import ProductCategories, Product
@@ -8,6 +9,17 @@ from mainapp.models import ProductCategories, Product
 def load_from_json(file_name):
     with open(file_name, mode='r', encoding='utf-8') as infile:
         return json.load(infile)
+
+
+def encoding_convert(file):
+    """Конвертация"""
+    with open(file, 'rb') as f_obj:
+        content_bytes = f_obj.read()
+    detected = detect(content_bytes)
+    encoding = detected['encoding']
+    content_text = content_bytes.decode(encoding)
+    with open(file, 'w', encoding='utf-8') as f_obj:
+        f_obj.write(content_text)
 
 
 class Command(BaseCommand):
@@ -25,6 +37,7 @@ class Command(BaseCommand):
 
         # <form>
         # </form>
+        encoding_convert('mainapp/fixtures/products.json')
         products = load_from_json('mainapp/fixtures/products.json')
 
         Product.objects.all().delete()

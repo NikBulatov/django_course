@@ -3,6 +3,7 @@ __pycache__
 db.sqlite3
 README.md
 run.bat
-/.vscode/
+.vscode
 .env
 venv
+.mypy_cache

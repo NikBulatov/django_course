@@ -9,7 +9,7 @@ from adminapp.views import (IndexTemplateView,
                             ProductsListView,
                             ProductCreateView,
                             ProductUpdateView,
-                            ProdcutDeleteView)
+                            ProductDeleteView)
 from adminapp.views import (create_category, 
                             update_category, 
                             delete_category, 
@@ -26,7 +26,7 @@ urlpatterns = [
 
     path('products/', ProductsListView.as_view(), name='admin_products'),
     path('product-create/', ProductCreateView.as_view(), name='create_product'),
-    path('product-delete/<int:pk>/', ProdcutDeleteView.as_view(), name='delete_product'),
+    path('product-delete/<int:pk>/', ProductDeleteView.as_view(), name='delete_product'),
     path('product-update/<int:pk>/', ProductUpdateView.as_view(), name='update_product'),
 
     path('categories/', admin_categories, name='admin_categories'),

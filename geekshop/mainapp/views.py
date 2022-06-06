@@ -5,11 +5,10 @@ from django.conf import settings
 from django.core.cache import cache
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render
-from django.views.decorators.cache import cache_page, never_cache
+from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 
-from adminapp.mixins import BaseClassContextMixin
 from mainapp.models import Product, ProductCategories
 
 MODULE_DIR = os.path.dirname(__file__)
@@ -58,8 +57,6 @@ def get_product(pk):
         return Product.objects.get(id=pk)
 
 
-# @cache_page(3600)
-@never_cache
 def products(request, id_category=None, page=1):
     if id_category:
         products_ = Product.objects.filter(category_id=id_category).select_related()
