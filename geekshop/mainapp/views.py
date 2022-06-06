@@ -32,30 +32,21 @@ def get_link_category():
         return ProductCategories.objects.all()
 
 
-def get_product(category, page):
-    if category:
-        if settings.LOW_CACHE:
-            key = f'link_product{category}{page}'
-            link_product = cache.get(key)
-            if link_product is None:
-                link_product = Product.objects.filter(category_id=category).select_related('category')
-                cache.set(key, link_product)
-            return link_product
-        else:
-            return Product.objects.filter(category_id=category).select_related('category')
+def get_product_from_category(category, page):
+    if settings.LOW_CACHE:
+        key = f'link_product{category}{page}' if category else 'link_product'
+        link_product = cache.get(key)
+        if link_product is None:
+            link_product = Product.objects.filter(category_id=category).select_related(
+                'category') if category else Product.objects.all().select_related('category')
+            cache.set(key, link_product)
+        return link_product
     else:
-        if settings.LOW_CACHE:
-            key = 'link_product'
-            link_product = cache.get(key)
-            if link_product is None:
-                link_product = Product.objects.all().select_related('category')
-                cache.set(key, link_product)
-            return link_product
-        else:
-            return Product.objects.all().select_related('category')
+        return Product.objects.filter(category_id=category).select_related(
+            'category') if category else Product.objects.all().select_related('category')
 
 
-def get_product_(pk):
+def get_product(pk):
     if settings.LOW_CACHE:
         key = f'product{pk}'
         product = cache.get(key)
@@ -67,14 +58,14 @@ def get_product_(pk):
         return Product.objects.get(id=pk)
 
 
-@cache_page(3600)
+# @cache_page(3600)
 # @never_cache
 def products(request, id_category=None, page=1):
     if id_category:
         products_ = Product.objects.filter(category_id=id_category).select_related()
-        # products_ = get_product(id_category,page)
+        products_ = get_product_from_category(id_category, page)
     else:
-        products_ = get_product(None, None)
+        products_ = get_product_from_category(None, None)
 
     pagination = Paginator(products_, per_page=6)
 
@@ -86,8 +77,8 @@ def products(request, id_category=None, page=1):
         product_pagination = pagination.page(pagination.num_pages)
     content = {
         'title': 'Geekshop - Каталог',
-        'categories': ProductCategories.objects.all(),
-        # 'categories': get_link_category(),
+        # 'categories': ProductCategories.objects.all(),
+        'categories': get_link_category(),
         'products': product_pagination
 
     }
@@ -125,3 +116,7 @@ class MainPageView(TemplateView):
 class ProductDetail(DetailView):
     model = Product
     template_name = 'mainapp/detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ProductDetail, self).get_context_data()
+        context['product'] = get_product(self.kwargs.get('pk'))
