@@ -91,7 +91,7 @@ WSGI_APPLICATION = 'geekshop.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-SERVER = True if not DEBUG else False
+SERVER = False
 if not SERVER:
     DATABASES = {
         'default': {
@@ -109,7 +109,7 @@ else:
             'USER': 'postgres'
         }
     }
-    STATICFILES_DIRS = (BASE_DIR / 'static',)
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 if os.name == 'posix':
     CACHE_MIDDLEWARE_ALIAS = 'default'

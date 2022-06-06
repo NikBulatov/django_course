@@ -1,6 +1,4 @@
 from django.db import transaction
-from django.db.models.signals import pre_save, pre_delete
-from django.dispatch import receiver
 from django.forms import inlineformset_factory
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy, reverse
