@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render
-from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page, never_cache
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 
@@ -59,7 +59,7 @@ def get_product(pk):
 
 
 # @cache_page(3600)
-# @never_cache
+@never_cache
 def products(request, id_category=None, page=1):
     if id_category:
         products_ = Product.objects.filter(category_id=id_category).select_related()
