@@ -32,17 +32,17 @@ def get_link_category():
 
 
 def get_product_from_category(category, page):
+    product = Product.objects.filter(category_id=category).select_related(
+        'category') if category else Product.objects.all().select_related('category')
     if settings.LOW_CACHE:
         key = f'link_product{category}{page}' if category else 'link_product'
         link_product = cache.get(key)
         if link_product is None:
-            link_product = Product.objects.filter(category_id=category).select_related(
-                'category') if category else Product.objects.all().select_related('category')
+            link_product = product
             cache.set(key, link_product)
         return link_product
     else:
-        return Product.objects.filter(category_id=category).select_related(
-            'category') if category else Product.objects.all().select_related('category')
+        return product
 
 
 def get_product(pk):
@@ -50,17 +50,16 @@ def get_product(pk):
         key = f'product{pk}'
         product = cache.get(key)
         if product is None:
-            product = Product.objects.get(id=pk)
+            product = Product.objects.get(pk=pk)
             cache.set(key, product)
         return product
     else:
-        return Product.objects.get(id=pk)
+        return Product.objects.get(pk=pk)
 
 
 def products(request, id_category=None, page=1):
     if id_category:
         products_ = Product.objects.filter(category_id=id_category).select_related()
-        products_ = get_product_from_category(id_category, page)
     else:
         products_ = get_product_from_category(None, None)
 
@@ -72,10 +71,11 @@ def products(request, id_category=None, page=1):
         product_pagination = pagination.page(1)
     except EmptyPage:
         product_pagination = pagination.page(pagination.num_pages)
+
     content = {
         'title': 'Geekshop - Каталог',
-        # 'categories': ProductCategories.objects.all(),
-        'categories': get_link_category(),
+        'categories': ProductCategories.objects.all(),
+        # 'categories': get_link_category(),
         'products': product_pagination
 
     }
