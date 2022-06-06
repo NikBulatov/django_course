@@ -24,6 +24,7 @@ from mainapp.views import MainPageView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', MainPageView.as_view(), name='index'),
+    # path('', MainPageView.as_view(), name='index'),
     path('products/', include('mainapp.urls', namespace='mainapp')),
     path('authapp/', include('authapp.urls', namespace='authapp')),
     path('basket/', include('basket.urls', namespace='basket')),
