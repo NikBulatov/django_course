@@ -22,8 +22,8 @@ class Order(models.Model):
                             (CANCEL, 'Отменён'))
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    created = models.DateTimeField(verbose_name='Создан', auto_now=True)
-    updated = models.DateTimeField(verbose_name='Обновлён', auto_now_add=True)
+    created = models.DateTimeField(verbose_name='Создан', auto_now_add=True)
+    updated = models.DateTimeField(verbose_name='Обновлён', auto_now=True)
     paid = models.DateTimeField(verbose_name='Оплачен', null=True, blank=True)
     status = models.CharField(choices=ORDER_STATUS_CHOICES, verbose_name='Статус', max_length=3, default=FORMING)
     is_active = models.BooleanField(verbose_name='Активен', default=True)
