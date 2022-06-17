@@ -10,6 +10,5 @@ admin.site.register(ProductCategories)
 class Product(admin.ModelAdmin):
     list_display = ('name', 'price', 'quantity', 'category')
     fields = ('name', 'image', 'descriptions', ('price', 'quantity'), 'category')
-    # readonly_fields = ('')  # поле, которое не изменить
     ordering = ('price', 'quantity')
-    search_fields = 'name',  # поле поиска по полю name
+    search_fields = ('name', )

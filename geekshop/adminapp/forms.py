@@ -13,8 +13,7 @@ class AdminRegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'password1', 'password2', 'last_name',
-                  'first_name', 'email', 'image', 'age')
+        fields = ('username', 'password1', 'password2', 'last_name', 'first_name', 'email', 'image', 'age')
 
     def __init__(self, *args, **kwargs):
         super(AdminRegisterForm, self).__init__(*args, **kwargs)
@@ -33,11 +32,9 @@ class AdminRegisterForm(UserCreationForm):
 
 
 class AdminProfileForm(UserChangeForm):
-
     class Meta:
         model = User
-        fields = ('username', 'last_name',
-                  'first_name', 'email', 'image', 'age')
+        fields = ('username', 'last_name', 'first_name', 'email', 'image', 'age')
 
     def __init__(self, *args, **kwargs):
         super(AdminProfileForm, self).__init__(*args, **kwargs)
@@ -64,8 +61,7 @@ class ProductForm(forms.ModelForm):
 class ProductCreateForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('name', 'category', 'quantity',
-                  'descriptions', 'image', 'price')
+        fields = ('name', 'category', 'quantity', 'descriptions', 'image', 'price')
 
     def __init__(self, *args, **kwargs):
         super(ProductCreateForm, self).__init__(*args, **kwargs)
@@ -84,8 +80,7 @@ class ProductCreateForm(forms.ModelForm):
 class ProductUpdateForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('name', 'category', 'quantity',
-                  'descriptions', 'image', 'price')
+        fields = ('name', 'category', 'quantity', 'descriptions', 'image', 'price')
 
     def __init__(self, *args, **kwargs):
         super(ProductUpdateForm, self).__init__(*args, **kwargs)
@@ -102,9 +97,12 @@ class ProductUpdateForm(forms.ModelForm):
 
 
 class CategoryUpdateForm(forms.ModelForm):
+    discount = forms.IntegerField(widget=forms.NumberInput(), label='скидка', required=False, min_value=0, max_value=90,
+                                  initial=0)
+
     class Meta:
         model = ProductCategories
-        fields = ('name', 'descriptions')
+        fields = ('name', 'descriptions', 'discount')
 
     def __init__(self, *args, **kwargs):
         super(CategoryUpdateForm, self).__init__(*args, **kwargs)
@@ -116,8 +114,9 @@ class CategoryUpdateForm(forms.ModelForm):
 
 
 class CategoryCreateForm(forms.ModelForm):
-    model = ProductCategories
-    fields = ('name', 'descriptions')
+    class Meta:
+        model = ProductCategories
+        fields = ('name', 'descriptions',)
 
     def __init__(self, *args, **kwargs):
         super(CategoryCreateForm, self).__init__(*args, **kwargs)

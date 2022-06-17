@@ -1,6 +1,10 @@
 from typing import Any
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
+from django.db import connection
+from django.db.models import F
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
@@ -67,6 +71,9 @@ class ProductsListView(ListView, BaseClassContextMixin, CustomDispatchMixin):
     title = 'Administration | Products'
     context_object_name = 'products'
 
+    def get_queryset(self):
+        return Product.objects.all().select_related()
+
 
 class ProductDeleteView(DeleteView, CustomDispatchMixin):
     model = Product
@@ -91,13 +98,11 @@ class ProductUpdateView(UpdateView, BaseClassContextMixin, CustomDispatchMixin):
     success_url = reverse_lazy('adminapp:admin_users')
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def admin_categories(request):
-    context = {
-        'title': 'Administration | Categories',
-        'categories': ProductCategories.objects.all()
-    }
-    return render(request, 'adminapp/admin-category-read.html', context)
+class CategoryReadView(ListView, BaseClassContextMixin):
+    model = ProductCategories
+    template_name = 'adminapp/admin-category-read.html'
+    title = 'Administration | Categories'
+    context_object_name = 'categories'
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -119,31 +124,47 @@ def create_category(request):
     return render(request, 'adminapp/admin-category-create.html', context)
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def update_category(request, id):
-    current_category = ProductCategories.objects.get(id=id)
-    if request.method == 'POST':
-        form = CategoryUpdateForm(data=request.POST, instance=current_category)
-        if form.is_valid():
-            form.save()
-            messages.set_level(request, messages.SUCCESS)
-            messages.success(request, 'Категория успешно обновилась!')
+class CategoryUpdateView(UpdateView, CustomDispatchMixin):
+    model = ProductCategories
+    template_name = 'adminapp/admin-category-update-delete.html'
+    success_url = reverse_lazy('admins:admin_category')
+    form_class = CategoryUpdateForm
+
+    def form_valid(self, form):
+        if 'discount' in form.cleaned_data:
+            discount = form.cleaned_data['discount']
+            if discount:
+                print(f'Скидка {discount} % к товарам категории {self.object.name}')
+                self.object.product_set.update(price=F('price') * (1 - discount / 100))
+                db_profile_by_type(self.__class__, 'UPDATE', connection.queries)
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class CategoryDeleteView(DeleteView, CustomDispatchMixin):
+    model = ProductCategories
+    template_name = 'adminapp/admin-category-update-delete.html'
+    success_url = reverse_lazy('admins:admin_category')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.product_set.update(is_active=False)
+        self.object.is_active = False
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+
+def db_profile_by_type(prefix, type, queries):
+    update_queries = list(filter(lambda x: type in x['sql'], queries))
+    print(f'db_profile {type} for {prefix}:')
+    [print(query['sql']) for query in update_queries]
+
+
+# signals
+@receiver(pre_save, sender=ProductCategories)
+def product_is_active_update_productcategory_save(sender, instance, **kwargs):
+    if instance.pk:
+        if instance.is_active:
+            instance.product_set.update(is_active=True)
         else:
-            print(form.errors)
-    else:
-        form = CategoryUpdateForm(instance=current_category)
-    context = {
-        'title': 'Administration | Update Category',
-        'form': form,
-        'current_product': current_category
-    }
-    return render(request, 'adminapp/admin-category-read.html', context)
-
-
-@user_passes_test(lambda u: u.is_superuser)
-def delete_category(request, id):
-    current_category = ProductCategories().objects.get(id=id)
-    current_category.delete()
-    messages.set_level(request, messages.SUCCESS)
-    messages.success(request, 'Категория успешно удалён')
-    return HttpResponseRedirect(reverse('adminapp:delete_category'))
+            instance.product_set.update(is_active=False)
+        db_profile_by_type(sender, 'UPDATE', connection.queries)
