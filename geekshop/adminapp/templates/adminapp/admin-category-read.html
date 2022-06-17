@@ -1,0 +1,44 @@
+{% extends 'adminapp/base.html' %}
+{% block context %}
+    <div class="container-fluid">
+        <h1 class="mt-4">{{ title | title }}</h1>
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table mr-1"></i>
+                Категории
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>Имя категории</th>
+                            <th>Описание</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>Имя категории</th>
+                            <th>Описание</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        {% for category in categories %}
+                            <tr>
+                                <td><a href="{% url 'adminapp:update_category' category.id %}"
+                                       style="color: dodgerblue">{{ category.name }}</a></td> {# Ссылка на обновление данных категории #}
+                                <td>{{ category.descriptions }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'adminapp:create_category' %}">
+                    <button class="btn btn-success">Создать категорию</button>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
